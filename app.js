@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'elite_founder_execution_document_v2';
+const STORAGE_KEY = 'elite_founder_execution_document_v3';
 const DEFAULT_DOC_URL = '/default-content.md';
 const KNOWLEDGE_DOC_URL = '/founder-knowledge-content.md';
 
@@ -229,30 +229,41 @@ function flattenNestedSubsections(section) {
   return bodyParts.join('\n\n').trim();
 }
 
-function mergeDocuments(primaryDoc, knowledgeDoc) {
-  const merged = normalizeState(primaryDoc);
+function documentToMasterSection(doc, fallbackTitle) {
+  const safeDoc = normalizeState(doc);
 
-  const knowledgeSection = {
-    id: uid(),
-    title: knowledgeDoc.title || 'Founder Knowledge & AI Leverage System',
-    body: '',
-    subsections: (knowledgeDoc.sections || []).map((section) => ({
+  const subsections = (safeDoc.sections || [])
+    .map((section) => ({
       id: uid(),
       title: section.title || 'Untitled Subsection',
       body: flattenNestedSubsections(section)
     }))
-  };
+    .filter((subsection) => subsection.title.trim() || subsection.body.trim());
 
-  if (!knowledgeSection.subsections.length) {
-    knowledgeSection.subsections.push({
+  if (!subsections.length) {
+    subsections.push({
       id: uid(),
       title: 'Overview',
-      body: 'Knowledge content could not be parsed. Paste it manually here.'
+      body: 'Content could not be parsed. Paste content here.'
     });
   }
 
-  merged.sections.push(normalizeSection(knowledgeSection));
-  return normalizeState(merged);
+  return normalizeSection({
+    id: uid(),
+    title: safeDoc.title || fallbackTitle,
+    body: '',
+    subsections
+  });
+}
+
+function mergeDocuments(primaryDoc, knowledgeDoc) {
+  const primarySection = documentToMasterSection(primaryDoc, 'Elite Founder Execution System');
+  const knowledgeSection = documentToMasterSection(knowledgeDoc, 'Founder Knowledge & AI Leverage System');
+
+  return normalizeState({
+    title: 'Founder Systems Workspace',
+    sections: [primarySection, knowledgeSection]
+  });
 }
 
 function toMarkdown(doc) {
