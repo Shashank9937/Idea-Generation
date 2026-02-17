@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Founder Execution System</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block">
+      <p class="eyebrow">Founder Playbook Website</p>
+      <input id="docTitleInput" class="doc-title-input" type="text" aria-label="Document title" />
+      <p class="subtext">Every section below is editable. You can add new sections and delete any section.</p>
+    </div>
+
+    <div class="action-bar">
+      <button id="addSectionBtn" class="btn primary" type="button">Add Section</button>
+      <button id="exportBtn" class="btn" type="button">Export Markdown</button>
+      <button id="resetBtn" class="btn danger" type="button">Reset Default</button>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <section class="status-row">
+      <span id="statusText">Loading document...</span>
+      <span id="sectionCount"></span>
+    </section>
+
+    <section id="sectionList" class="section-list" aria-live="polite"></section>
+  </main>
+
+  <template id="sectionTemplate">
+    <article class="section-card">
+      <div class="section-top">
+        <span class="section-number"></span>
+        <div class="section-buttons">
+          <button type="button" class="btn tiny" data-action="move-up">Up</button>
+          <button type="button" class="btn tiny" data-action="move-down">Down</button>
+          <button type="button" class="btn tiny" data-action="duplicate">Duplicate</button>
+          <button type="button" class="btn tiny danger" data-action="delete">Delete</button>
+        </div>
+      </div>
+
+      <label class="field-label">Section Title</label>
+      <input type="text" class="section-title-input" />
+
+      <label class="field-label">Section Content</label>
+      <textarea class="section-body-input" rows="9"></textarea>
+    </article>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
