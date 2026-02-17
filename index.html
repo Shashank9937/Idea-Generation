@@ -11,7 +11,7 @@
     <div class="brand-block">
       <p class="eyebrow">Founder Playbook Website</p>
       <input id="docTitleInput" class="doc-title-input" type="text" aria-label="Document title" />
-      <p class="subtext">Every section below is editable. You can add new sections and delete any section.</p>
+      <p class="subtext">Edit everything below. Each main section supports nested subsections with add, delete, move, and duplicate actions.</p>
     </div>
 
     <div class="action-bar">
@@ -46,7 +46,33 @@
       <input type="text" class="section-title-input" />
 
       <label class="field-label">Section Content</label>
-      <textarea class="section-body-input" rows="9"></textarea>
+      <textarea class="section-body-input" rows="6"></textarea>
+
+      <div class="subsection-head">
+        <h3>Subsections</h3>
+        <button type="button" class="btn tiny primary add-subsection-btn">Add Subsection</button>
+      </div>
+      <div class="subsection-list"></div>
+    </article>
+  </template>
+
+  <template id="subsectionTemplate">
+    <article class="subsection-card">
+      <div class="subsection-top">
+        <span class="subsection-number"></span>
+        <div class="section-buttons">
+          <button type="button" class="btn tiny" data-sub-action="move-up">Up</button>
+          <button type="button" class="btn tiny" data-sub-action="move-down">Down</button>
+          <button type="button" class="btn tiny" data-sub-action="duplicate">Duplicate</button>
+          <button type="button" class="btn tiny danger" data-sub-action="delete">Delete</button>
+        </div>
+      </div>
+
+      <label class="field-label">Subsection Title</label>
+      <input type="text" class="subsection-title-input" />
+
+      <label class="field-label">Subsection Content</label>
+      <textarea class="subsection-body-input" rows="7"></textarea>
     </article>
   </template>
 

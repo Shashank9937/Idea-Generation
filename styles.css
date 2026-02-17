@@ -6,10 +6,12 @@
   --ink-strong: #102132;
   --ink-muted: #4d6175;
   --line: #d8cfc0;
+  --line-strong: #cabda9;
   --accent: #1f8a66;
   --accent-2: #1e5ab8;
   --danger: #ba2d0f;
   --card: #fffdf8;
+  --subcard: #fff8ee;
   --shadow: 0 14px 30px rgba(21, 34, 48, 0.12);
 }
 
@@ -128,7 +130,8 @@ body {
   }
 }
 
-.section-top {
+.section-top,
+.subsection-top {
   display: flex;
   justify-content: space-between;
   gap: 0.8rem;
@@ -136,7 +139,8 @@ body {
   margin-bottom: 0.8rem;
 }
 
-.section-number {
+.section-number,
+.subsection-number {
   color: var(--ink-muted);
   font-size: 0.86rem;
   font-weight: 700;
@@ -159,7 +163,9 @@ body {
 }
 
 .section-title-input,
-.section-body-input {
+.section-body-input,
+.subsection-title-input,
+.subsection-body-input {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -170,21 +176,55 @@ body {
   background: #fff;
 }
 
-.section-title-input {
+.section-title-input,
+.subsection-title-input {
   margin-bottom: 0.8rem;
   font-weight: 700;
 }
 
-.section-body-input {
+.section-body-input,
+.subsection-body-input {
   resize: vertical;
-  min-height: 180px;
+  min-height: 135px;
   line-height: 1.5;
 }
 
 .section-title-input:focus,
-.section-body-input:focus {
+.section-body-input:focus,
+.subsection-title-input:focus,
+.subsection-body-input:focus {
   outline: 2px solid rgba(31, 138, 102, 0.34);
   border-color: rgba(31, 138, 102, 0.65);
+}
+
+.subsection-head {
+  margin-top: 1rem;
+  border-top: 1px dashed var(--line-strong);
+  padding-top: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.subsection-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+}
+
+.subsection-list {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.subsection-card {
+  background: var(--subcard);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent-2);
+  border-radius: 12px;
+  padding: 0.75rem;
 }
 
 .btn {
@@ -230,7 +270,9 @@ body {
     justify-content: flex-start;
   }
 
-  .section-top {
+  .section-top,
+  .subsection-top,
+  .subsection-head {
     flex-direction: column;
     align-items: flex-start;
   }
