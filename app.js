@@ -3,6 +3,7 @@ const DEFAULT_DOC_URL = '/default-content.md';
 const KNOWLEDGE_DOC_URL = '/founder-knowledge-content.md';
 
 const docTitleInput = document.getElementById('docTitleInput');
+const sectionTabsEl = document.getElementById('sectionTabs');
 const sectionListEl = document.getElementById('sectionList');
 const sectionTemplate = document.getElementById('sectionTemplate');
 const subsectionTemplate = document.getElementById('subsectionTemplate');
@@ -19,6 +20,7 @@ let state = {
 
 let defaultState = null;
 let saveTimer = null;
+let activeSectionId = null;
 
 function uid() {
   if (window.crypto && typeof window.crypto.randomUUID === 'function') {
@@ -44,6 +46,43 @@ function queueSave() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     setStatus(`Saved at ${new Date().toLocaleTimeString()}`);
   }, 220);
+}
+
+function getActiveSectionIndex() {
+  return state.sections.findIndex((section) => section.id === activeSectionId);
+}
+
+function ensureActiveSection() {
+  if (!state.sections.length) {
+    activeSectionId = null;
+    return;
+  }
+
+  const activeExists = state.sections.some((section) => section.id === activeSectionId);
+  if (!activeExists) {
+    activeSectionId = state.sections[0].id;
+  }
+}
+
+function renderSectionTabs() {
+  sectionTabsEl.innerHTML = '';
+
+  state.sections.forEach((section) => {
+    const tabBtn = document.createElement('button');
+    tabBtn.type = 'button';
+    tabBtn.className = 'section-tab-btn';
+    if (section.id === activeSectionId) {
+      tabBtn.classList.add('active');
+    }
+
+    tabBtn.textContent = section.title || 'Untitled Section';
+    tabBtn.addEventListener('click', () => {
+      activeSectionId = section.id;
+      render();
+    });
+
+    sectionTabsEl.appendChild(tabBtn);
+  });
 }
 
 function normalizeSubsection(item) {
@@ -317,6 +356,7 @@ function duplicateSection(index) {
   };
 
   state.sections.splice(index + 1, 0, sectionCopy);
+  activeSectionId = sectionCopy.id;
   render();
   queueSave();
 }
@@ -333,18 +373,28 @@ function deleteSection(index) {
     return;
   }
 
+  const wasActive = section.id === activeSectionId;
   state.sections.splice(index, 1);
+
+  if (wasActive) {
+    const replacement = state.sections[index] || state.sections[index - 1] || state.sections[0];
+    activeSectionId = replacement ? replacement.id : null;
+  }
+
   render();
   queueSave();
 }
 
 function addSection() {
-  state.sections.push({
+  const newSection = {
     id: uid(),
     title: 'New Section',
     body: 'Write your section notes here.',
     subsections: []
-  });
+  };
+
+  state.sections.push(newSection);
+  activeSectionId = newSection.id;
 
   render();
   queueSave();
@@ -408,10 +458,19 @@ function deleteSubsection(sectionIndex, subsectionIndex) {
 }
 
 function render() {
+  ensureActiveSection();
   docTitleInput.value = state.title;
+  renderSectionTabs();
   sectionListEl.innerHTML = '';
 
-  state.sections.forEach((section, sectionIndex) => {
+  const sectionIndex = getActiveSectionIndex();
+  if (sectionIndex < 0) {
+    updateCount();
+    return;
+  }
+
+  const section = state.sections[sectionIndex];
+  {
     const fragment = sectionTemplate.content.cloneNode(true);
 
     const card = fragment.querySelector('.section-card');
@@ -486,7 +545,7 @@ function render() {
     });
 
     sectionListEl.appendChild(fragment);
-  });
+  }
 
   updateCount();
 }
@@ -571,6 +630,7 @@ async function init() {
 
   const saved = loadSavedState();
   state = saved || normalizeState(defaultState);
+  activeSectionId = state.sections[0]?.id || null;
 
   docTitleInput.addEventListener('input', (event) => {
     state.title = event.target.value;

@@ -104,6 +104,31 @@ body {
   font-size: 0.9rem;
 }
 
+.section-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.section-tab-btn {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink-strong);
+  padding: 0.5rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.section-tab-btn.active {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(118deg, var(--accent-2), #3657c2);
+}
+
 .section-list {
   display: grid;
   gap: 1rem;
